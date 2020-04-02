@@ -1,12 +1,7 @@
-/* eslint-disable radix */
-const { Pool } = require('pg')
+const pool = require('./pool')
 
-const pool = new Pool({
-  user: 'tien',
-  password: 'tien',
-  host: 'localhost',
-  database: 'userDB',
-  post: 5432
+pool.on('connect', () => {
+  console.log('connected to the db')
 })
 
 const getUsers = (req, res) => {
