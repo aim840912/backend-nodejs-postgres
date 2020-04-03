@@ -41,7 +41,7 @@ const generateUserToken = (email, id) => {
   return token
 }
 
-export {
+module.exports = {
   hashPassword,
   comparePassword,
   isValidEmail,

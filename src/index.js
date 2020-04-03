@@ -1,15 +1,14 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 const userRoute = require('./routes/user')
 
 // create a new Express app server object
 const app = express()
 
-// parse application/x-www-form-urlencoded
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
-
-// parse application/json
 app.use(bodyParser.json())
 
 app.use(userRoute)

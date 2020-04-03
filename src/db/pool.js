@@ -1,12 +1,13 @@
-const {Pool}=require('pg')
+const { Pool } = require('pg')
+// const dotenv = require('dotenv')
 
-const databaseConfig = { connectionString: env.database_url };
+// const databaseConfig = { connectionString: process.env.DATABASE_URL }
 const pool = new Pool({
-    user: 'tien',
-    password: 'tien',
-    host: 'localhost',
-    database: 'userDB',
-    post: 5432
-  })
+  user: 'tien',
+  password: 'aim830912',
+  host: 'localhost',
+  database: 'postgres',
+  post: 5432
+})
 
-  export default pool
+export default pool
