@@ -29,11 +29,12 @@ const empty = input => {
   return false
 }
 
-const generateUserToken = (email, id) => {
+const generateUserToken = (email, id, name) => {
   const token = jwt.sign(
     {
       email,
-      user_id: id
+      user_id: id,
+      name
     },
     'secretToken',
     { expiresIn: '3d' }
