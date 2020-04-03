@@ -1,5 +1,6 @@
 const express = require('express')
 const moment = require('moment')
+const dbQuery = require('../db/dbQuery')
 
 const {
   hashPassword,
@@ -8,7 +9,7 @@ const {
   validatePassword,
   empty,
   generateUserToken
-} = require('../utils/featrues')
+} = require('../helpers/featrues')
 
 const router = express.Router()
 
@@ -38,9 +39,16 @@ router.post('/user/signup', async (req, res) => {
   const values = [name, email, password, createdTime]
 
   try {
-    
+    const { rows } = await dbQuery.query(createUserQuery, values)
+    const dbResponse = rows[0]
+    delete dbResponse.password
+    const token = generateUserToken(
+      dbResponse.email,
+      dbResponse.id,
+      dbResponse.name
+    )
   } catch (error) {
-    return res.status(400).send(errorMessage)
+    return res.status(400).send('Operation was not successful')
   }
 })
 router.post('/user/login')
