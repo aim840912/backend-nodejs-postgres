@@ -1,13 +1,6 @@
-import pool from './pool'
+const pool = require('./pool')
 
-/**
- * DB Query
- * @param {object} req
- * @param {object} res
- * @returns{object} object
- */
-
-export default {
+module.exports = {
   query(queryText, params) {
     return new Promise((resolve, reject) => {
       pool

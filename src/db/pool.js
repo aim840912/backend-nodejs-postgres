@@ -10,4 +10,4 @@ const pool = new Pool({
   post: 5432
 })
 
-export default pool
+module.exports = pool

@@ -37,8 +37,8 @@ router.post('/user/signup', async (req, res) => {
   const createUserQuery = `INSERT INTO
   user(name,email,password,createdTime)
   VALUES($1,$2,$3,$4)
-  returning *
-  `
+  returning *`
+
   const values = [name, email, hashedPAssword, createdTime]
 
   try {
