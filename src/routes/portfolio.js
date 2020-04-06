@@ -76,6 +76,35 @@ router.delete('/portfolio/:portfolio', auth, async (req, res) => {
   }
 })
 
-router.put('/portfolio/:portfolio', auth, async (req, res) => {})
+router.put('/portfolio/:portfolio', auth, async (req, res) => {
+  const { portfolio } = req.params
+  const { title, url, description } = req.body
+
+  const { userId } = req.user
+  if (empty(title) || empty(url)) {
+    errorMessage.err = 'Must be required'
+    return res.status(status.bad).send(errorMessage)
+  }
+  const findPortfolioQuery = `SELECT * FROM portfolio WHERE id=$1`
+  const updatePortfolio = `UPDATE portfolio SET title=$1 url=$2 descritpion=$3 WHERE userId=$4 AND id=$5 return *`
+
+  try {
+    const { rows } = await dbQuery.query(findPortfolioQuery, [portfolio])
+    const dbResponse = rows[0]
+    if (!dbResponse) {
+      errorMessage.error = 'Booking Cannot be found'
+      return res.status(status.notfound).send(errorMessage)
+    }
+    const values = [title, url, description]
+    const response = await dbQuery.query(updatePortfolio, values)
+    const dbResult = response.rows[0]
+    delete dbResult.password
+    successMessage.data = dbResult
+    return res.status(status.success).send(successMessage)
+  } catch (error) {
+    errorMessage.error = 'Operation was not successful'
+    return res.status(status.error).send(errorMessage)
+  }
+})
 
 module.exports = router
