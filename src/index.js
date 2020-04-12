@@ -1,6 +1,10 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const dotenv = require('dotenv')
+
+dotenv.config()
+const port = process.env.PORT || 3000
 
 const userRoute = require('./routes/user')
 const portfolioRoute = require('./routes/portfolio')
@@ -15,6 +19,10 @@ app.use(bodyParser.json())
 app.use(userRoute)
 app.use(portfolioRoute)
 
-app.listen(3000).on('listening', () => {
-  console.log('start on the port 3000')
-})
+app
+  .listen(port, () => {
+    console.log(`Server is up on port ${port}`)
+  })
+  .on('error', err => {
+    console.log(err)
+  })

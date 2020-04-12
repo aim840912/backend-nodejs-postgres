@@ -1,6 +1,12 @@
 const pool = require('./pool')
 
 module.exports = {
+  /**
+   * DB Query
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} object
+   */
   query(queryText, params) {
     return new Promise((resolve, reject) => {
       pool
