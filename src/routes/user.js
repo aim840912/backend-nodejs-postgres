@@ -56,14 +56,14 @@ router.post('/user/signup', async (req, res) => {
       dbResponse.id,
       dbResponse.name
     )
+
+    dbResponse.tokens = dbResponse.token
     successMessage.data = dbResponse
-    console.log(successMessage.data)
     successMessage.data.token = token
-    return res.status(status.created).send(successMessage)
+    return res.status(status.created).json(successMessage.data)
   } catch (error) {
     if (error.routine === '_bt_check_unique') {
       errorMessage.error = 'User with that email already exist'
-      console.log(error)
       return res.status(status.conflict).send(errorMessage)
     }
     console.log(error)
@@ -90,7 +90,6 @@ router.post('/user/login', async (req, res) => {
       return res.status(status.notfound).send(errorMessage)
     }
     if (!comparePassword(dbResponse.password, password)) {
-      console.log(hashPassword(password))
       errorMessage.error = 'The password you provided is incorrect'
       return res.status(status.bad).send(errorMessage)
     }
@@ -99,11 +98,11 @@ router.post('/user/login', async (req, res) => {
       dbResponse.id,
       dbResponse.name
     )
+    dbResponse.tokens = dbResponse.tokens.concat({ token })
     delete dbResponse.password
     successMessage.data = dbResponse
     successMessage.data.token = token
-    console.log('success')
-    return res.status(status.success).json({ dbResponse, token })
+    return res.status(status.success).json({ successMessage })
   } catch (error) {
     errorMessage.error = 'Operation was not successful'
     console.log(error)

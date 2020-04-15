@@ -10,8 +10,8 @@ const router = express.Router()
 
 router.post('/portfolio', auth, async (req, res) => {
   const { title, url, intro } = req.body
-  const { name, email } = req.user
-  const createTime = moment(new Date())
+  const owner = req.user.name
+  const createdTime = moment(new Date())
 
   if (empty(title) || empty(url)) {
     errorMessage.error = 'title and url is required'
@@ -19,11 +19,16 @@ router.post('/portfolio', auth, async (req, res) => {
   }
 
   const createPortfolioQuery = `INSERT INTO
-  portfolio(name,title,url,intro,email,createTime)
-  VALUES($1,$2,$3,$4,$5,$6)
+  portfolio(
+    owner,
+    title,
+    url,
+    intro,
+    createdTime)
+  VALUES($1,$2,$3,$4,$5)
   returing *`
 
-  const values = [name, title, url, intro, email, createTime]
+  const values = [owner, title, url, intro, createdTime]
 
   try {
     const { rows } = await dbQuery.query(createPortfolioQuery, values)
