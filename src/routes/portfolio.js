@@ -9,8 +9,11 @@ const { errorMessage, successMessage, status } = require('../helpers/status')
 const router = express.Router()
 
 router.post('/portfolio', auth, async (req, res) => {
+  console.log('req.body')
+  console.log(req.body)
   const { title, url, intro } = req.body
   const owner = req.user.name
+  console.log(owner)
   const createdTime = moment(new Date())
 
   if (empty(title) || empty(url)) {
@@ -26,16 +29,19 @@ router.post('/portfolio', auth, async (req, res) => {
     intro,
     createdTime)
   VALUES($1,$2,$3,$4,$5)
-  returing *`
+  returning *`
 
   const values = [owner, title, url, intro, createdTime]
 
   try {
+    console.log('trycatchport')
     const { rows } = await dbQuery.query(createPortfolioQuery, values)
     const dbReponse = rows[0]
+    console.log(dbReponse)
     successMessage.data = dbReponse
-    return res.statusMessage(status.created).send(successMessage)
+    return res.status(status.created).send(successMessage)
   } catch (error) {
+    console.log(error)
     errorMessage.error = 'Unable to create'
     return res.status(status.error).send(errorMessage)
   }

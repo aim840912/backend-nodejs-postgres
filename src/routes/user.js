@@ -98,7 +98,6 @@ router.post('/user/login', async (req, res) => {
       dbResponse.id,
       dbResponse.name
     )
-    dbResponse.tokens = dbResponse.tokens.concat({ token })
     delete dbResponse.password
     successMessage.data = dbResponse
     successMessage.data.token = token

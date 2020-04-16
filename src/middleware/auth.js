@@ -5,21 +5,25 @@ const { errorMessage, status } = require('../helpers/status')
 dotenv.config()
 
 const verifyToken = async (req, res, next) => {
-  const { token } = req.header
-  console.log(req.headers)
+  console.log('token')
+  const token = req.header('Authorization').replace('Bearer ', '')
+  console.log(token)
   if (!token) {
     errorMessage.error = 'Token not provided'
     return res.status(status.bad).send(errorMessage)
   }
   try {
-    const decoded = jwt.verify(token, process.env.SECRET)
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    console.log(decoded)
     req.user = {
       email: decoded.email,
-      user_id: decoded.user_id,
+      user_id: decoded.id,
       name: decoded.name
     }
+    console.log('verify success')
     return next()
   } catch (error) {
+    console.log(error)
     errorMessage.error = 'Authentication Failed'
     return res.status(status.unauthorized).send(errorMessage)
   }

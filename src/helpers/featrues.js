@@ -1,5 +1,8 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv')
+
+dotenv.config()
 
 const saltRounds = 10
 const salt = bcrypt.genSaltSync(saltRounds)
@@ -36,7 +39,7 @@ const generateUserToken = (email, id, name) => {
       user_id: id,
       name
     },
-    'secretToken',
+    process.env.JWT_SECRET,
     { expiresIn: '3d' }
   )
   return token
