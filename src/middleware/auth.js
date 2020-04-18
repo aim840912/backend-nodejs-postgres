@@ -20,10 +20,8 @@ const verifyToken = async (req, res, next) => {
       user_id: decoded.id,
       name: decoded.name
     }
-    console.log('verify success')
     return next()
   } catch (error) {
-    console.log(error)
     errorMessage.error = 'Authentication Failed'
     return res.status(status.unauthorized).send(errorMessage)
   }

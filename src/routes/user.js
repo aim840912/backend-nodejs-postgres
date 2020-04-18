@@ -17,7 +17,6 @@ const router = express.Router()
 
 router.post('/user/signup', async (req, res) => {
   const { name, email, password } = req.body
-  // console.log(req.body.name)
 
   const createdTime = moment(new Date())
 
