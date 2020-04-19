@@ -1,6 +1,7 @@
 const FacebookStrategy = require('passport-facebook').Strategy
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 const bcrypt = require('bcryptjs')
+const moment = require('moment')
 
 const dbQuery = require('../db/dbQuery')
 
@@ -63,17 +64,15 @@ module.exports = passport => {
             // encrypt password
             bcrypt.genSalt(10, (err, salt) => {
               bcrypt.hash(randomPassword, salt, (err, hash) => {
-                if (err) throw err
-                const newUser = new User({
+                if (err) {
+                  throw err
+                }
+                createUser({
                   name: profile._json.name,
                   email: profile._json.email,
-                  password: hash
+                  password: hash,
+                  createdTime: moment(new Date())
                 })
-                // Save document to user collection
-                newUser
-                  .save()
-                  .then(user => done(null, user))
-                  .catch(err => console.error(err))
               })
             })
           })
