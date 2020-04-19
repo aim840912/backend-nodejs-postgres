@@ -10,11 +10,33 @@ const checkUserInSQL = async email => {
     const { rows } = await dbQuery.query(loginUserQuery, [email])
     const dbResponse = rows[0]
     if (!dbResponse) {
-      return console.log('!dbResponse')
+      return true
     }
-    return console.log('ok')
+    return false
   } catch (error) {
     return console.log('error')
+  }
+}
+
+const createUser = async (name, email, hashedPassword, createdTime) => {
+  const createUserQuery = `INSERT INTO
+    users(
+      name ,
+      email,
+      password,
+      createdTime)
+    VALUES($1, $2, $3, $4)
+    returning *`
+
+  const values = [name, email, hashedPassword, createdTime]
+
+  try {
+    const { rows } = await dbQuery.query(createUserQuery, values)
+    const dbResponse = rows[0]
+    delete dbResponse.password
+    return dbResponse
+  } catch (error) {
+    return error
   }
 }
 
@@ -29,14 +51,12 @@ module.exports = passport => {
         passReqToCallback: true
       },
       (req, accessToken, refreshToken, profile, done) => {
-        User.findOne({ email: profile._json.email })
+        checkUserInSQL({ email: profile._json.email })
           .then(user => {
-            // existing user
             if (user) {
               return done(null, user)
             }
 
-            // new user
             const randomPassword = Math.random()
               .toString(36)
               .slice(-8)
