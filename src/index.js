@@ -1,4 +1,6 @@
 const express = require('express')
+const session = require('express-session')
+const passport = require('passport')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const dotenv = require('dotenv')
@@ -15,6 +17,21 @@ const app = express()
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+app.use(
+  session({
+    secret: 'nksnfoiehhrekwqnrlkje',
+    resave: 'false',
+    saveUninitialized: 'false'
+  })
+)
+
+app.use(passport.initialize())
+// used for persistent login sessions
+app.use(passport.session())
+
+// include strategy configuration
+require('./config/passport')(passport)
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')

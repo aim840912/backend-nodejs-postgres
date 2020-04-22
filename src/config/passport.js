@@ -6,14 +6,15 @@ const moment = require('moment')
 const dbQuery = require('../db/dbQuery')
 
 const checkUserInSQL = async email => {
+  console.log(email)
   const loginUserQuery = 'SELECT * FROM users WHERE email = $1'
   try {
     const { rows } = await dbQuery.query(loginUserQuery, [email])
     const dbResponse = rows[0]
     if (!dbResponse) {
-      return true
+      return null
     }
-    return false
+    return dbResponse
   } catch (error) {
     return console.log('error')
   }
@@ -52,17 +53,18 @@ module.exports = passport => {
         passReqToCallback: true
       },
       (req, accessToken, refreshToken, profile, done) => {
+        console.log(req)
         checkUserInSQL({ email: profile._json.email })
           .then(user => {
+            console.log(user)
             if (user) {
               return done(null, user)
             }
-
             const randomPassword = Math.random()
               .toString(36)
               .slice(-8)
-            // encrypt password
-            bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.genSalt(10, (error, salt) => {
+              // eslint-disable-next-line no-shadow
               bcrypt.hash(randomPassword, salt, (err, hash) => {
                 if (err) {
                   throw err
@@ -82,4 +84,29 @@ module.exports = passport => {
       }
     )
   )
+
+  const findUserId = async id => {
+    const loginUserQuery = 'SELECT * FROM users WHERE id = $1'
+    try {
+      const { rows } = await dbQuery.query(loginUserQuery, [id])
+      const dbResponse = rows[0]
+      if (!dbResponse) {
+        return console.log('cant find this id')
+      }
+      return id
+    } catch (error) {
+      return console.log('error')
+    }
+  }
+  // serialize user instance to the session
+  passport.serializeUser((user, done) => {
+    done(null, user.id)
+  })
+
+  // deserialize user instance from the session
+  passport.deserializeUser((id, done) => {
+    findUserId(id, (err, user) => {
+      done(err, user)
+    })
+  })
 }

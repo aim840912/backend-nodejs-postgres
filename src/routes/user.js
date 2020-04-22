@@ -1,6 +1,6 @@
 const express = require('express')
 const moment = require('moment')
-const bcrypt = require('bcryptjs')
+const passport = require('passport')
 
 const dbQuery = require('../db/dbQuery')
 const { errorMessage, successMessage, status } = require('../helpers/status')
@@ -14,6 +14,20 @@ const {
 } = require('../helpers/featrues')
 
 const router = express.Router()
+
+router.get(
+  '/user/facebook',
+  passport.authenticate('facebook', { scope: ['email', 'public_profile'] })
+)
+
+// Facebook authentication callback route
+router.get(
+  '/user/facebook/callback',
+  passport.authenticate('facebook', {
+    successRedirect: '/',
+    failureRedirect: '/'
+  })
+)
 
 router.post('/user/signup', async (req, res) => {
   const { name, email, password } = req.body
@@ -107,5 +121,7 @@ router.post('/user/login', async (req, res) => {
     return res.status(status.error).send(errorMessage)
   }
 })
+
+
 
 module.exports = router
