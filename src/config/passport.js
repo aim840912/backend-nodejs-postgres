@@ -4,6 +4,12 @@ const bcrypt = require('bcryptjs')
 const moment = require('moment')
 
 const dbQuery = require('../db/dbQuery')
+const {
+  hashPassword,
+  comparePassword,
+  validatePassword,
+  generateUserToken
+} = require('../helpers/featrues')
 
 const checkUserInSQL = async email => {
   console.log(email)
@@ -63,19 +69,12 @@ module.exports = passport => {
             const randomPassword = Math.random()
               .toString(36)
               .slice(-8)
-            bcrypt.genSalt(10, (error, salt) => {
-              // eslint-disable-next-line no-shadow
-              bcrypt.hash(randomPassword, salt, (err, hash) => {
-                if (err) {
-                  throw err
-                }
-                createUser({
-                  name: profile._json.name,
-                  email: profile._json.email,
-                  password: hash,
-                  createdTime: moment(new Date())
-                })
-              })
+            const hashedPassword = hashPassword(randomPassword)
+            createUser({
+              name: profile._json.name,
+              email: profile._json.email,
+              password: hashedPassword,
+              createdTime: moment(new Date())
             })
           })
           .catch(err =>
