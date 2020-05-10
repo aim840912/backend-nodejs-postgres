@@ -1,6 +1,8 @@
-# Boilerplate
+# Portfollo
 
-The Boilerplate is a professional backend template for building fast, robust, and adaptable Node.js Application.
+1. Create your User 
+2. CRUD Your own portfollo
+3. Everyone can see your portfollo
 
 ## Quick start
 
@@ -19,8 +21,16 @@ The Boilerplate is a professional backend template for building fast, robust, an
 
 - Production ready. Use newest features without worrying about any incompatibility.
 - Includes:
-  - [`koa`](https://koajs.com/)
+  - [`express`](https://expressjs.com/)
   - [`Jest`](https://github.com/facebook/jest)
 - [`Babel`](https://babeljs.io/) to transpile the source code
 - Lint the code with airbnb based [`ESLint`](https://github.com/eslint/eslint) config & [`Prettier`](https://github.com/prettier/prettier)
 - Code quality protection by linting with git hook
+
+## Stack
+
+- NodeJs (Web server)
+- Express (Web server framework)
+- Passport (Authentication with fb)
+- Postgres (database)
+- jwt (Secutity)
