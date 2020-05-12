@@ -26,6 +26,7 @@ app.use(
   })
 )
 
+// Initialize passport
 app.use(passport.initialize())
 // used for persistent login sessions
 app.use(passport.session())
@@ -40,6 +41,11 @@ app.use((req, res, next) => {
     'OPTIONS, GET, POST, PUT, PATCH, DELETE'
   )
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  next()
+})
+
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.isAuthenticated()
   next()
 })
 

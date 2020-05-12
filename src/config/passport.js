@@ -1,22 +1,15 @@
 const FacebookStrategy = require('passport-facebook').Strategy
-const GoogleStrategy = require('passport-google-oauth20').Strategy
-const bcrypt = require('bcryptjs')
 const moment = require('moment')
 
 const dbQuery = require('../db/dbQuery')
-const {
-  hashPassword,
-  comparePassword,
-  validatePassword,
-  generateUserToken
-} = require('../helpers/featrues')
+const { hashPassword } = require('../helpers/featrues')
 
 const checkUserInSQL = async email => {
-  console.log(email)
   const loginUserQuery = 'SELECT * FROM users WHERE email = $1'
   try {
     const { rows } = await dbQuery.query(loginUserQuery, [email])
     const dbResponse = rows[0]
+    console.log(dbResponse)
     if (!dbResponse) {
       return null
     }
@@ -59,10 +52,9 @@ module.exports = passport => {
         passReqToCallback: true
       },
       (req, accessToken, refreshToken, profile, done) => {
-        console.log(req)
+        console.log(profile)
         checkUserInSQL({ email: profile._json.email })
           .then(user => {
-            console.log(user)
             if (user) {
               return done(null, user)
             }
@@ -76,6 +68,8 @@ module.exports = passport => {
               password: hashedPassword,
               createdTime: moment(new Date())
             })
+              .then(createdUser => done(null, createdUser))
+              .catch(err => console.log(err))
           })
           .catch(err =>
             done(err, false, req.flash('fail_msg', 'Facebook 驗證失敗'))
@@ -92,7 +86,8 @@ module.exports = passport => {
       if (!dbResponse) {
         return console.log('cant find this id')
       }
-      return id
+      console.log(dbResponse)
+      return dbResponse
     } catch (error) {
       return console.log('error')
     }

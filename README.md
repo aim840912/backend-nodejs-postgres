@@ -1,6 +1,6 @@
 # Portfollo
 
-1. Create your User 
+1. Create your User
 2. CRUD Your own portfollo
 3. Everyone can see your portfollo
 
@@ -34,3 +34,4 @@
 - Passport (Authentication with fb)
 - Postgres (database)
 - jwt (Secutity)
+- Docker
